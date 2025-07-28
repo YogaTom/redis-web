@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/YogaTom/redis-web.git'
+            }
+        }
+
+        stage('Build with Docker Compose') {
+            steps {
+                sh '''
+                    docker-compose down
+                    docker-compose build
+                '''
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    docker-compose up -d
+                    # 可以根据你的项目情况修改，比如用 curl 检查健康
+                    sleep 5
+                    docker-compose ps
+                '''
+            }
+        }
+
+        stage('Stop Services') {
+            steps {
+                sh 'docker-compose down'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: '**/*.log', allowEmptyArchive: true
+        }
+    }
+}
+
