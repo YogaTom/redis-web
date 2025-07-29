@@ -2,6 +2,14 @@ pipeline {
     agent { label 'master' }
 
     stages {
+        stage('Build on Host') {
+            steps {
+                sshagent(['host-ssh-key']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no user@host "cd /home/yogatom/docker-tutorial/redis-web && docker-compose down && docker-compose build && docker-compose up -d"
+                    '''
+                }
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/YogaTom/redis-web.git'
