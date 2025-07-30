@@ -12,7 +12,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['deploy-ssh', 'github-ssh']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no tom@8.138.221.221 "
+                    ssh -A -o StrictHostKeyChecking=no tom@8.138.221.221 "
                         if [ ! -d /home/tom/redis-web/.git ]; then
                             git clone git@github.com:YogaTom/redis-web.git /home/tom/redis-web
                         fi
