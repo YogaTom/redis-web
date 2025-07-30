@@ -10,16 +10,18 @@ pipeline {
 
         stage('Deploy to Remote') {
             steps {
-                sshagent(credentials: ['deploy-ssh']) {
+                sshagent(credentials: ['deploy-alicloud']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no tom@8.138.221.221 << 'EOF'
-                        cd /home/tom/redis-web || git clone git@github.com:YogaTom/redis-web.git
+                    ssh -o StrictHostKeyChecking=no tom@8.138.221.221 "
+                        if [ ! -d /home/tom/redis-web/.git ]; then
+                            git clone git@github.com:YogaTom/redis-web.git /home/tom/redis-web
+                        fi
                         cd /home/tom/redis-web
                         git pull
                         sudo docker compose down
                         sudo docker compose build
                         sudo docker compose up -d
-                    EOF
+                    "
                     '''
                 }
             }
