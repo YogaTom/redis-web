@@ -10,7 +10,7 @@ pipeline {
 
         stage('Deploy to Remote') {
             steps {
-                sshagent(credentials: ['deploy-ssh']) {
+                sshagent(credentials: ['deploy-ssh', 'github-ssh']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no tom@8.138.221.221 "
                         if [ ! -d /home/tom/redis-web/.git ]; then
