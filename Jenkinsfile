@@ -13,8 +13,8 @@ pipeline {
                 sshagent(credentials: ['deploy-ssh']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no tom@8.138.221.221 << 'EOF'
-                        cd /opt/redis-web || git clone git@github.com:YogaTom/redis-web.git /opt/redis-web
-                        cd /opt/redis-web
+                        cd /home/tom/redis-web || git clone git@github.com:YogaTom/redis-web.git /opt/redis-web
+                        cd /home/tom/redis-web
                         git pull
                         sudo docker compose down
                         sudo docker compose build
